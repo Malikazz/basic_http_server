@@ -1,4 +1,4 @@
-use std::{net::{TcpListener, TcpStream, Shutdown}, io::{Read, Write, BufWriter}, time::Duration, fs::{self, File}, error::Error};
+use std::{net::{TcpListener, TcpStream, Shutdown}, io::{Read, Write, BufWriter}, time::Duration, fs::{self, File}, error::Error, path::Path};
 
 fn main() {
     let listen_address = String::from("127.0.0.1:8080");
@@ -50,19 +50,22 @@ pub fn not_found_response(stream: &mut TcpStream){
     stream.write(message.as_bytes()).expect("Failed to write to stream");
 }
 
-pub fn load_resource(path: String) -> Result<String, String>{
-    let file = File::open(path);
-    let mut content: String;
-    let result
-    match file {
-        Ok(temp) => temp.read_to_string(&mut content),
-        Err(error) => 
+pub fn is_path_valid(path: &Path) -> Option<Path>{
+    //TODO: need some kinda way to restrict access to paths outside
+    let trapped_folder = "/home/malikaz/github/basic_http_server/www/";
+    //always prepend a starting directory?
+    let root_path = Path::new(trapped_folder);
+    let joined_path: Path;
+    if (!path.is_absolute){
+        joined_path = root_path.join(path);
     }
+    
+
 }
 
 struct HttpRequest{
     method: Method,
-    requested_path: String
+    requested_path: Path
 }
 
 enum Method {
